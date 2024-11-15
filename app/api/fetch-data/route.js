@@ -10,7 +10,16 @@ export async function GET(request) {
         throw new Error(`Error en la petición: ${response.statusText}`);
       }
   
-      const data = await response.json();
+      // Verifica el tipo de contenido
+      const contentType = response.headers.get('Content-Type') || '';
+  
+      let data;
+      if (contentType.includes('application/json')) {
+        data = await response.json(); // Parsear como JSON
+      } else {
+        data = await response.text(); // Leer como texto plano
+      }
+  
       console.log('Petición exitosa:', data);
   
       // Responde con los datos obtenidos
