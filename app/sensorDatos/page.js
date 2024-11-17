@@ -157,13 +157,13 @@ export default function SensorDatosPage() {
         Ver tabla principal
       </button>
 
-      <div className="flex flex-col gap-4 items-start mx-auto lg:flex-row lg:gap-5">
+      <div className="flex flex-col gap-4 items-start mx-auto lg:flex-row lg:gap-5 mb-10">
         <div className="w-full max-w-4xl flex flex-col gap-4">
             <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5">
             {data.length > 0 && (
-                <div className="mb-4 text-center">
-                    <p className="text-lg font-semibold text-gray-700">
-                    <span className="mr-2">Fechas de registros:</span>
+                <div className="mb-4 text-center flex w-full items-center">
+                    <h3 className="text-3xl text-black font-bold mr-2">Fechas de registros:</h3>
+                    <p className="text-2xl font-semibold text-gray-700">
                     <span className="font-bold">
                         {new Date(Math.min(...data.map(d => new Date(d.tiempo_registro)))).toLocaleDateString()} a {new Date(Math.max(...data.map(d => new Date(d.tiempo_registro)))).toLocaleDateString()}
                     </span>
@@ -179,7 +179,7 @@ export default function SensorDatosPage() {
 
             <div className="w-full flex gap-4">
                 <div className="w-full bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
-                    <h3 className="text-2xl font-bold text-black">Último valor registrado:</h3>
+                    <h3 className="text-xl font-bold text-black">Último valor registrado:</h3>
                     {Object.keys(data).length > 0 ? (
                         <p className="text-5xl mt-4 font-bold text-gray-800 text-center">
                         {Object.values(data)
@@ -192,14 +192,14 @@ export default function SensorDatosPage() {
                 </div>
 
                 <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
-                    <h3 className="text-2xl font-bold text-black">Valores registrados</h3>
+                    <h3 className="text-xl font-bold text-black">Valores registrados</h3>
                     <p className="text-lg mt-4 text-gray-600">
                     <strong>Promedio:</strong> <span className="text-2xl font-bold">{averageValue.toFixed(2)}</span>
                     </p>
                 </div>
 
                 <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
-                    <h3 className="text-2xl font-bold text-black">Tiempo encendido hrs:</h3>
+                    <h3 className="text-xl font-bold text-black">Tiempo encendido hrs:</h3>
                     <p className="text-lg mt-4 text-gray-600">
                         <strong>Tiempo encendida hrs:</strong>{" "}
                         <span className="text-2xl font-bold">
