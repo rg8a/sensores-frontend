@@ -14,6 +14,8 @@ export default function SensorDatosPage() {
   const pieChartRef = useRef(null);
   const chartInstance = useRef(null);
   const pieChartInstance = useRef(null);
+  const barChartRef = useRef(null);
+  const barChartInstance = useRef(null);
   const [showGreaterThan50, setShowGreaterThan50] = useState(true);
   const [showLessThan50, setShowLessThan50] = useState(true);
 
@@ -60,11 +62,11 @@ export default function SensorDatosPage() {
           y: item.valor_fotoresistor,
           r: 5,
           backgroundColor:
-            item.valor_fotoresistor < 50
+            item.valor_fotoresistor < 51
               ? "rgba(75, 192, 192, 0.5)"
               : "rgba(192, 75, 75, 0.5)",
           borderColor:
-            item.valor_fotoresistor < 50
+            item.valor_fotoresistor < 51
               ? "rgb(75, 192, 192)"
               : "rgb(192, 75, 75)",
         }));
@@ -109,9 +111,79 @@ export default function SensorDatosPage() {
             },
           },
         });
-        
     }
   }, [data, showGreaterThan50, showLessThan50]);
+
+  useEffect(() => {
+    if (data.length > 0 && barChartRef.current) {
+      const now = new Date();
+      const last24Hours = data.filter((item) => {
+        const recordTime = new Date(item.tiempo_registro);
+        return now - recordTime <= 24 * 60 * 60 * 1000; // Registros de las últimas 24 horas
+      });
+
+      // Agrupar por horas
+      const groupedByHour = Array.from({ length: 24 }, (_, i) => ({
+        hour: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() - i),
+        count: 0,
+      }));
+
+      last24Hours.forEach((item) => {
+        const recordHour = new Date(item.tiempo_registro).getHours();
+        const matchingGroup = groupedByHour.find(
+          (group) => group.hour.getHours() === recordHour
+        );
+        if (matchingGroup) matchingGroup.count++;
+      });
+
+      if (barChartInstance.current) {
+        barChartInstance.current.destroy();
+      }
+
+      const ctx = barChartRef.current.getContext("2d");
+      barChartInstance.current = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: groupedByHour.map((group) =>
+            group.hour.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          ),
+          datasets: [
+            {
+              label: "Registros por hora",
+              data: groupedByHour.map((group) => group.count),
+              backgroundColor: "rgba(75, 192, 192, 0.5)",
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Hora",
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Cantidad de registros",
+              },
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "Registros de las últimas 24 horas",
+            },
+          },
+        },
+      });
+    }
+  }, [data]);
+  
 
   // Pie chart for LED state
   useEffect(() => {
@@ -187,8 +259,8 @@ export default function SensorDatosPage() {
         Ver tabla principal
       </button>
 
-      <div className="flex flex-col gap-4 items-start mx-auto lg:flex-row lg:gap-5 mb-10 lg:px-0">
-        <div className="w-full max-w-4xl flex flex-col gap-4">
+      <div className="flex flex-col gap-4 items-start mx-auto lg:flex-col lg:gap-5 mb-10 lg:px-0">
+        <div className="w-full flex flex-col gap-4 lg:flex-row">
             <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5">
             {data.length > 0 && (
                 <div className="mb-4 text-center flex w-full items-center flex-col">
@@ -228,29 +300,29 @@ export default function SensorDatosPage() {
 
             </div>
 
-            <div className="w-full flex gap-4">
-                <div className="w-full bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
-                    <h3 className="text-xl font-bold text-black">Último valor registrado:</h3>
-                    {Object.keys(data).length > 0 ? (
-                        <p className="text-5xl mt-4 font-bold text-gray-800 text-center">
-                        {Object.values(data)
-                            .sort((a, b) => new Date(b.tiempo_registro) - new Date(a.tiempo_registro))[0]
-                            .valor_fotoresistor ?? "N/A"}
-                        </p>
-                    ) : (
-                        <p className="text-lg mt-4 text-gray-600 text-center">No hay datos disponibles</p>
-                    )}
-                </div>
+          <div className="flex flex-row gap-4 lg:flex-col">
+              <div className="w-full bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
+                        <h3 className="text-xl font-bold text-black">Último valor registrado:</h3>
+                        {Object.keys(data).length > 0 ? (
+                            <p className="text-5xl mt-4 font-bold text-gray-800 text-center">
+                            {Object.values(data)
+                                .sort((a, b) => new Date(b.tiempo_registro) - new Date(a.tiempo_registro))[0]
+                                .valor_fotoresistor ?? "N/A"}
+                            </p>
+                        ) : (
+                            <p className="text-lg mt-4 text-gray-600 text-center">No hay datos disponibles</p>
+                        )}
+              </div>
 
-                <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
+              <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
                     <h3 className="text-xl font-bold text-black">Valores registrados</h3>
                     <p className="text-lg mt-4 text-gray-600">
                     <strong>Promedio:</strong> <span className="text-3xl font-bold">{averageValue.toFixed(2)}</span>
                     </p>
-                </div>
+              </div>
 
-                <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
-                    <h3 className="text-xl font-bold text-black">Tiempo encendido hrs:</h3>
+              <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 h-[250px] lg:h-auto">
+                    <h3 className="text-xl font-bold text-black">Tiempo encendido:</h3>
                     <p className="text-lg mt-4 text-gray-600">
                         <span className="text-3xl font-bold">
                         {(
@@ -263,16 +335,25 @@ export default function SensorDatosPage() {
                                 const curr = new Date(current.tiempo_registro);
                                 return total + (curr - prev) / (1000 * 60 * 60); // Convertir a horas
                             }, 0) || 0
-                        ).toFixed(2)}
+                        ).toFixed(2)} hrs
                         </span>
                     </p>
-                </div>
-
-            </div>
+              </div>
+          </div>
         </div>
 
-        <div className="flex gap-5 flex-wrap w-full lg:flex-nowrap lg:w-auto">
-          <div className="w-full max-w-4xl bg-gray-100 rounded-2xl p-5 flex flex-col items-center">
+        <div className="w-full flex flex-col lg:flex-row gap-4">
+          <div className="w-full lg:w-2/3 bg-gray-100 rounded-2xl p-5">
+            <h3 className="text-2xl font-bold text-center mb-4 text-black">
+              Registros de las últimas 24 horas
+            </h3>
+            <canvas
+              ref={barChartRef}
+              style={{ maxWidth: "600px", margin: "0 auto", width: "100%" }}
+            />
+          </div>
+
+          <div className="w-full lg:w-1/3 bg-gray-100 rounded-2xl p-5 flex flex-col items-center">
             <h3 className="text-2xl font-bold text-black">Conteo del LED Encendido</h3>
             <p className="text-lg mt-4 text-gray-600">
               <strong>Total registros:</strong> <span className="text-2xl font-bold">{data.length}</span>
@@ -285,10 +366,13 @@ export default function SensorDatosPage() {
             </p>
             <canvas
               ref={pieChartRef}
-              style={{ maxWidth: "300px", margin: "0 auto", width: "100%", marginTop: "20px" }}
+              style={{ maxWidth: "250px", margin: "0 auto", width: "100%", marginTop: "20px" }}
             />
           </div>
         </div>
+
+
+
       </div>
 
       {showTable && (
@@ -340,7 +424,7 @@ export default function SensorDatosPage() {
         </div>
       )}
     </div>
-    <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center mt-10">
+    <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center my-10">
           <a
             className="flex items-center gap-2 hover:underline hover:underline-offset-4"
             href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
