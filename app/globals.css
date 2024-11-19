@@ -19,3 +19,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+::-moz-selection { /* Code for Firefox */
+  color: black;
+  background: #39ff14;
+}
+
+::selection {
+  color: black;
+  background: #39ff14;
+}

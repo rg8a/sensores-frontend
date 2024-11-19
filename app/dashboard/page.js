@@ -241,17 +241,27 @@ export default function SensorDatosPage() {
   return (
     <>
     <div className="container flex flex-col mx-auto items-center px-10">
-      <h1 className="text-3xl font-bold mt-10">Datos del Sensor Fotoresistor (LDR)</h1>
       <Link href="/" passHref>
         <Image
-            className="mx-auto my-5 mb-10"
+            className="mx-auto mt-10 mb-8"
             src="/logoequipo.svg"
             alt="Next.js logo"
             width={200}
             height={38}
             priority
         />
-    </Link>
+      </Link>
+      <h1 className="text-3xl font-bold mb-6">Datos del Sensor Fotoresistor (LDR)</h1>
+      <h3 className="font-bold mb-2">El valor registrado por el LDR estará en el rango de 0 a 1023</h3>
+        <ol className="mx-auto text-sm text-center font-[family-name:var(--font-geist-mono)] mb-8">
+          <li className="mb-2">
+          0: Voltaje más bajo (oscuridad máxima).
+          </li>
+          <li className="mb-2">
+          1023: Voltaje más alto (luz máxima).
+          </li>
+        </ol>
+
       <button
         onClick={() => setShowTable(true)}
         className="mb-10 px-4 py-2 w-full rounded-full bg-green-500 text-white font-semibold md:w-[200px]"
@@ -424,11 +434,10 @@ export default function SensorDatosPage() {
         </div>
       )}
     </div>
-    <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center my-10">
+    <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center mb-20">
           <a
             className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
+            href="/documentacion"
             rel="noopener noreferrer"
           >
             <Image
@@ -439,37 +448,52 @@ export default function SensorDatosPage() {
               height={16}
             />
             Documentación
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://lookerstudio.google.com/reporting/10eee32e-c578-4589-ba04-749eeef34dc5"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/window.svg"
-              alt="Window icon"
-              width={16}
-              height={16}
-            />
-            Looker Studio →
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://github.com/rg8a/sensores-backend"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="/globe.svg"
-              alt="Globe icon"
-              width={16}
-              height={16}
-            />
-            Backend Github →
-          </a>
+            </a>
+            <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://lookerstudio.google.com/reporting/10eee32e-c578-4589-ba04-749eeef34dc5"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/window.svg"
+            alt="Window icon"
+            width={16}
+            height={16}
+          />
+          Looker Studio →
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://github.com/rg8a/sensores-backend"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Backend Github →
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://github.com/rg8a/sensores-frontend"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Frontend Github →
+        </a>
     </footer>
     </>
   );
