@@ -364,21 +364,36 @@ export default function SensorDatosPage() {
           </div>
 
           <div className="w-full lg:w-1/3 bg-gray-100 rounded-2xl p-5 flex flex-col items-center">
-            <h3 className="text-2xl font-bold text-black">Conteo del LED Encendido</h3>
-            <p className="text-lg mt-4 text-gray-600">
-              <strong>Total registros:</strong> <span className="text-2xl font-bold">{data.length}</span>
-            </p>
-            <p className="text-lg mt-2 text-gray-600">
-              <strong>Encendido:</strong> <span className="text-2xl font-bold">{data.filter((item) => item.modo_operacion === 1).length}</span>
-            </p>
-            <p className="text-lg mt-2 text-gray-600">
-              <strong>Apagado:</strong> <span className="text-2xl font-bold">{data.filter((item) => item.modo_operacion === 0).length}</span>
-            </p>
-            <canvas
-              ref={pieChartRef}
-              style={{ maxWidth: "250px", margin: "0 auto", width: "100%", marginTop: "20px" }}
-            />
-          </div>
+          <h3 className="text-2xl font-bold text-black">Conteo del LED Encendido</h3>
+          <p className="text-lg mt-4 text-gray-600">
+            <strong>Total registros:</strong> <span className="text-2xl font-bold">{data.length}</span>
+          </p>
+          <p className="text-lg mt-2 text-gray-600">
+            <strong>Encendido:</strong> 
+            <span className="text-2xl font-bold">
+              {data.filter((item) => item.modo_operacion === 1).length}
+            </span>
+            {" -  "}
+            <span className="text-sm text-gray-500 font-bold">
+              ({((data.filter((item) => item.modo_operacion === 1).length / data.length) * 100).toFixed(2)}%)
+            </span>
+          </p>
+          <p className="text-lg mt-2 text-gray-600">
+            <strong>Apagado:</strong> 
+            <span className="text-2xl font-bold">
+              {data.filter((item) => item.modo_operacion === 0).length}
+            </span>
+            {" - "}
+            <span className="text-sm text-gray-500 font-bold">
+              ({((data.filter((item) => item.modo_operacion === 0).length / data.length) * 100).toFixed(2)}%)
+            </span>
+          </p>
+          <canvas
+            ref={pieChartRef}
+            style={{ maxWidth: "250px", margin: "0 auto", width: "100%", marginTop: "20px" }}
+          />
+        </div>
+
         </div>
 
 
